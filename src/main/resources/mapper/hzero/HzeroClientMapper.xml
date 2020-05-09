@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="io.choerodon.migration.mapper.hzero.platform.HzeroClientMapper">
+
+    <!--<insert id="batchInsert">-->
+        <!--INSERT IGNORE INTO -->
+          <!--oauth_client(`id`, -->
+          <!--`name`, -->
+          <!--`organization_id`, -->
+          <!--`resource_ids`, -->
+          <!--`secret`, -->
+          <!--`scope`, -->
+          <!--`authorized_grant_types`, -->
+          <!--`web_server_redirect_uri`, -->
+          <!--`access_token_validity`, -->
+          <!--`refresh_token_validity`, -->
+          <!--`additional_information`, -->
+          <!--`auto_approve`, -->
+          <!--`object_version_number`, -->
+          <!--`created_by`, -->
+          <!--`creation_date`, -->
+          <!--`last_updated_by`, -->
+          <!--`last_update_date`) -->
+        <!--VALUES -->
+        <!--<foreach collection="objects" item="object" index="i" separator=",">-->
+            <!--(-->
+                <!--#{object.id}, #{object.name}, #{object.organizationId}, #{object.resourceIds}, #{object.secret},-->
+                <!--#{object.scope}, #{object.authorizedGrantTypes}, #{object.webServerRedirectUri}, #{object.accessTokenValidity},-->
+                <!--#{object.refreshTokenValidity}, #{object.additionalInformation}, #{object.autoApprove}, #{object.objectVersionNumber},-->
+                <!--#{object.createdBy}, #{object.creationDate}, #{object.lastUpdatedBy}, #{object.lastUpdateDate}-->
+            <!--)-->
+        <!--</foreach>-->
+    <!--</insert>-->
+</mapper>

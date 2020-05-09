@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.choerodon.migration.mapper.hzero.platform.UserHzeroMapper">
+    <select id="selectUserTenant" resultType="io.choerodon.migration.domian.hzero.User">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        select
+        iu.id,
+        iu.organization_id,
+        ht.tenant_num,
+        httl.tenant_name
+        from iam_user iu
+        join hpfm_tenant ht on iu.organization_id = ht.tenant_id
+        LEFT JOIN hpfm_tenant_tl httl ON ht.tenant_id = httl.tenant_id AND httl.lang = #{lang}
+        where iu.id = #{userId}
+    </select>
+
+</mapper>

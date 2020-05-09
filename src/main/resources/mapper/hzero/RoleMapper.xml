@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.choerodon.migration.mapper.hzero.platform.RoleMapper">
+
+    <resultMap id="BaseResultMap" type="io.choerodon.migration.domian.vo.RoleVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="description" property="description"/>
+        <result column="fd_level" property="level"/>
+        <result column="is_enabled" property="isEnabled" javaType="Boolean"/>
+        <result column="is_modified" property="isModified" javaType="Boolean"/>
+        <result column="is_enable_forbidden" property="isEnableForbidden" javaType="Boolean"/>
+        <result column="is_built_in" property="isBuiltIn" javaType="Boolean"/>
+        <result column="is_assignable" property="isAssignable" javaType="Boolean"/>
+        <result column="h_tenant_id" property="tenantId"/>
+        <result column="h_inherit_role_id" property="inheritRoleId"/>
+        <result column="h_parent_role_id" property="parentRoleId"/>
+        <result column="h_parent_role_assign_level" property="parentRoleAssignLevel"/>
+        <result column="h_parent_role_assign_level_val" property="parentRoleAssignLevelValue"/>
+        <result column="creation_date" property="creationDate" jdbcType="DATE"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="object_version_number" property="objectVersionNumber"/>
+
+        <result column="admin_flag" property="adminFlag"/>
+        <result column="assigned_flag" property="assignedFlag"/>
+        <result column="have_admin_flag" property="haveAdminFlag"/>
+
+        <result column="admin_role_id" property="adminRoleId"/>
+        <result column="admin_role_code" property="adminRoleCode"/>
+        <result column="admin_role_name" property="adminRoleName"/>
+        <result column="admin_role_level" property="adminRoleLevel"/>
+        <result column="admin_role_tenant_id" property="adminRoleTenantId"/>
+        <result column="admin_role_tenant_num" property="adminRoleTenantNum"/>
+        <result column="admin_role_tenant_name" property="adminRoleTenantName"/>
+        <result column="h_inherit_level_path" property="inheritLevelPath"/>
+
+        <result column="parent_role_assign_unit_id" property="parentRoleAssignUnitId"/>
+        <result column="parent_role_assign_unit_name" property="parentRoleAssignUnitName"/>
+
+        <result column="is_default_role" property="isDefaultRole"/>
+        <result column="default_role_id" property="defaultRoleId"/>
+        <result column="level_meaning" property="levelMeaning"/>
+        <result column="inherited_role_name" property="inheritedRoleName"/>
+        <result column="parent_role_name" property="parentRoleName"/>
+        <result column="tenant_name" property="tenantName"/>
+        <result column="source_id" property="sourceId"/>
+        <result column="source_type" property="sourceType"/>
+        <result column="h_assign_level" property="assignLevel"/>
+        <result column="h_assign_level_value" property="assignLevelValue"/>
+        <result column="assign_level_value_meaning" property="assignLevelValueMeaning"/>
+        <result column="role_source" property="roleSource"/>
+        <result column="member_role_id" property="memberRoleId"/>
+        <result column="h_level_path" property="levelPath"/>
+        <result column="children_num" property="childrenNum"/>
+
+        <result column="inherited_role_id" property="inheritedRole.id"/>
+        <result column="inherited_role_name" property="inheritedRole.name"/>
+        <result column="inherited_role_code" property="inheritedRole.code"/>
+        <result column="inherited_role_description" property="inheritedRole.description"/>
+    </resultMap>
+
+
+    <resultMap id="RoleLabel" type="io.choerodon.migration.domian.hzero.Role">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="fd_level" property="level"/>
+        <result column="h_tenant_id" property="tenantId"/>
+        <result column="h_inherit_role_id" property="inheritRoleId"/>
+        <result column="h_parent_role_id" property="parentRoleId"/>
+        <collection property="roleLabels" ofType="io.choerodon.migration.domian.hzero.Label">
+            <id column="label_id" property="id" />
+            <result column="label_name" property="name" />
+            <result column="label_type" property="type" />
+        </collection>
+    </resultMap>
+    <sql id="RoleBaseColumn">
+        ir.id,
+        ir.code,
+        irt.name,
+        ir.description,
+        ir.fd_level,
+        ir.h_tenant_id,
+        ir.h_inherit_role_id,
+        ir.h_parent_role_id,
+        ir.h_parent_role_assign_level,
+        ir.h_parent_role_assign_level_val,
+        ir.is_enabled,
+        ir.is_modified,
+        ir.is_enable_forbidden,
+        ir.is_built_in,
+        case when ir.is_built_in = 1 then 'default' else 'custom' end role_source,
+        ir.is_assignable,
+        ir.h_level_path,
+        ir.h_inherit_level_path,
+        ir.object_version_number,
+        ir.created_by,
+        ir.creation_date
+    </sql>
+
+    <sql id="RoleBaseCondition">
+        <if test="id != null">
+            and ir.id = #{id}
+        </if>
+        <if test="tenantId != null">
+            and ir.h_tenant_id = #{tenantId}
+        </if>
+        <if test="code != null and code != ''">
+            <bind name="codeLike" value="'%' + code + '%'" />
+            and ir.code LIKE #{codeLike}
+        </if>
+        <if test="level != null and level != ''">
+            and ir.fd_level = #{level}
+        </if>
+        <if test="parentRoleId != null">
+            and ir.h_parent_role_id = #{parentRoleId}
+        </if>
+        <if test="parentRoleAssignLevel != null and parentRoleAssignLevel != ''">
+            and ir.h_parent_role_assign_level = #{parentRoleAssignLevel}
+        </if>
+        <if test="parentRoleAssignLevelValue != null">
+            and ir.h_parent_role_assign_level_val = #{parentRoleAssignLevelValue}
+        </if>
+        <if test="isEnabled != null">
+            and ir.is_enabled = #{isEnabled}
+        </if>
+        <if test="createStartDate != null ">
+            and ir.creation_date >= #{createStartDate}
+        </if>
+        <if test="createEndDate != null ">
+            and ir.creation_date &lt;= #{createEndDate}
+        </if>
+        <if test="updateStartDate != null ">
+            and ir.last_update_date >= #{updateStartDate}
+        </if>
+        <if test="updateEndDate != null ">
+            and ir.last_update_date &lt;= #{updateEndDate}
+        </if>
+        <choose>
+            <when test="roleSource == 'default'">
+                and ir.is_built_in = 1
+            </when>
+            <when test="roleSource == 'custom'">
+                and ir.is_built_in = 0
+            </when>
+        </choose>
+    </sql>
+
+
+    <!-- 查询模板角色 -->
+    <select id="selectGlobalTemplateRole" resultMap="RoleLabel">
+        select
+            ir.id,
+            ir.name,
+            ir.code,
+            ir.fd_level,
+            ir.h_tenant_id,
+            ir.h_inherit_role_id,
+            ir.h_parent_role_id,
+            ir.tpl_role_name,
+            il.id label_id,
+            il.name label_name,
+            il.type label_type
+        from iam_role ir
+        join hiam_label_rel hlr on (
+            hlr.data_type = 'ROLE'
+            and hlr.data_id = ir.id
+            and hlr.assign_type = 'A'
+        )
+        join iam_label il on il.id = hlr.label_id
+        where ir.is_enabled = 1
+        and ir.is_built_in = 1
+        and ir.fd_level = 'organization'
+        and il.preset_flag = 1
+        and il.enabled_flag = 1
+        and exists (
+            select 1
+            from iam_label il
+            join hiam_label_rel hlr on (
+                hlr.data_type = 'ROLE'
+                and hlr.label_id = il.id
+                and hlr.assign_type = 'A'
+            )
+            where
+            hlr.data_id = ir.id
+            and il.enabled_flag = 1
+            and il.preset_flag = 1
+            and il.name = 'TENANT_ROLE_TPL'
+        )
+    </select>
+
+
+    <select id="selectTplRoleNameById" resultType="java.util.HashMap">
+        select
+            irt.lang,
+            irt.tpl_role_name name
+        from iam_role ir
+        join iam_role_tl irt on ir.id = irt.id
+        where ir.id = #{roleId}
+    </select>
+
+    <!-- 查询角色的所有子孙角色 -->
+    <select id="selectAllSubRoles"  resultType="io.choerodon.migration.domian.hzero.Role">
+        SELECT
+            ir_child.id,
+            ir_child.code,
+            ir_child.name,
+            ir_child.is_enabled,
+            ir_child.object_version_number
+        from iam_role ir_child
+        where exists (
+            select 'x'
+            from iam_role ir
+            where ir.id = #{roleId}
+            and ir.fd_level = ir_child.fd_level
+            and ir_child.h_level_path like concat(ir.h_level_path, '|%')
+        )
+    </select>
+
+    <!--  查询用户的管理角色  -->
+    <select id="selectUserAdminRoles" resultMap="BaseResultMap">
+        <bind name="lang" value="@io.choerodon.migration.infra.util.LanguageHelper@language()"/>
+        select
+        httl.tenant_name,
+        <include refid="RoleBaseColumn" />
+        from iam_member_role imr
+        join iam_role ir on ir.id = imr.role_id
+        join iam_role_tl irt on (ir.id = irt.id and irt.lang = #{lang})
+        join hpfm_tenant ht on ht.tenant_id = ir.h_tenant_id
+        LEFT JOIN hpfm_tenant_tl httl ON ht.tenant_id = httl.tenant_id AND httl.lang = #{lang}
+        where imr.member_type = 'user'
+        and imr.member_id = #{userId}
+        and ir.is_enabled = 1
+        and exists (
+        select
+        1
+        from iam_menu ps
+        join iam_role_permission irp on (ps.id = irp.permission_id and irp.type = 'PS')
+        where ps.code like '%role.ps.create'
+        and ps.type = 'ps'
+        and ps.h_enabled_flag = 1
+        and irp.role_id = ir.id
+        and (irp.h_create_flag = 'Y' or irp.h_inherit_flag = 'Y')
+        )
+        <include refid="RoleBaseCondition" />
+        <if test="name != null and name != ''">
+            <bind name="nameLike" value="'%' + name + '%'" />
+            and irt.name LIKE #{nameLike}
+        </if>
+        order by ir.id
+    </select>
+</mapper>
